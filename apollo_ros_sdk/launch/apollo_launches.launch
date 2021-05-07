@@ -1,0 +1,83 @@
+<launch>
+
+
+  <!-- rviz view_navigation.launch -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find apollo_ros_sdk)/rviz/apollo_viz.rviz"/>
+
+  <!-- lidar nodes  /-->
+  <arg name="rplidar" default="$(find rplidar_ros)/launch/rplidar_a3.launch"/>
+  <include file="$(arg rplidar)"/>
+<!--
+  <arg name="apollo_lidar" default="$(find apollo_lidar)/launch/scan.launch"/>
+  <include file="$(arg apollo_lidar)"/> /-->
+
+  <arg name="laserscan_multi_merger" default="$(find ira_laser_tools)/launch/laserscan_multi_merger.launch"/>
+  <include file="$(arg laserscan_multi_merger)"/>
+
+  <!-- navigation nodes  /-->
+  <arg name="apollo_ros_nav" default="$(find apollo_ros_navigation)/launch/apollo_ros_navigation.launch"/>
+  <include file="$(arg apollo_ros_nav)"/>
+
+  <!-- <arg name="apollo_ros_gmapping" default="$(find apollo_ros_navigation)/launch/apollo_ros_gmapping.launch"/>
+  <include file="$(arg apollo_ros_gmapping)"/> -->
+
+  <arg name="base_global_planner" default="navfn/NavfnROS"/>
+  <!-- <arg name="base_local_planner" default="dwa_local_planner/DWAPlannerROS"/> -->
+  <arg name="base_local_planner" default="teb_local_planner/TebLocalPlannerROS" />
+
+   <arg name="odom_frame_id"   default="odom"/>
+   <arg name="base_frame_id"   default="base_link"/>
+   <arg name="global_frame_id" default="map"/>
+   <arg name="odom_topic" default="odom" />
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+      <rosparam file="$(find apollo_ros_sdk)/cfg/diff_drive/costmap_common_params.yaml" command="load" ns="global_costmap" />
+      <rosparam file="$(find apollo_ros_sdk)/cfg/diff_drive/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+      <rosparam file="$(find apollo_ros_sdk)/cfg/diff_drive/global_costmap_params.yaml" command="load" />
+      <rosparam file="$(find apollo_ros_sdk)/cfg/diff_drive/local_costmap_params.yaml" command="load" />
+
+      <rosparam file="$(find apollo_ros_sdk)/cfg/diff_drive/teb_local_planner_params.yaml" command="load" ns="TebLocalPlannerROS"/>
+
+      <param name="base_global_planner" value="$(arg base_global_planner)"/>
+      <param name="base_local_planner" value="$(arg base_local_planner)"/>
+
+      <!-- reset frame_id parameters using user input data -->
+      <param name="global_costmap/global_frame" value="$(arg global_frame_id)"/>
+      <param name="global_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+      <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
+      <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
+
+      <remap from="cmd_vel" to="move_base/cmd_vel"/>
+
+
+  </node>
+
+
+  <node pkg="nodelet" type="nodelet" name="navigation_velocity_smoother" args="load yocs_velocity_smoother/VelocitySmootherNodelet mobile_base_nodelet_manager">
+
+    <remap from="navigation_velocity_smoother/smooth_cmd_vel" to="cmd_vel"/>
+    <remap from="navigation_velocity_smoother/robot_cmd_vel" to="cmd_vel"/>
+    <remap from="navigation_velocity_smoother/raw_cmd_vel" to="move_base/cmd_vel"/>
+
+    <param name="speed_lim_v" value="0.8"/>
+    <param name="speed_lim_w" value="5.4"/>
+    <param name="accel_lim_v" value="1.0"/><!-- # maximum is actually 2.0, but we push it down to be smooth -->
+    <param name="accel_lim_w" value="2.0"/>
+
+    <!-- # Optional parameters -->
+    <param name="frequency" value="1.0"/>
+    <param name="decel_factor" value="1.5"/>
+
+    <!-- # Robot velocity feedback type:
+    #  0 - none (default)
+    #  1 - odometry
+    #  2 - end robot commands -->
+    <param name="robot_feedback" value="0"/>
+
+
+  </node>
+
+<!-- <node name="record_topics_for_verification" pkg="rosbag" type="record" args="/apollo/battery" output="log"/> -->
+<!-- <node pkg="rosbag" type="record" args="-O ../Bag/battery.bag /apollo/battery" name="record" output="log"/> -->
+</launch>

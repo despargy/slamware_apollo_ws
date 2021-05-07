@@ -1,0 +1,5 @@
+--Set move_base_msgs::MoveBaseGoal goal; for each static spot
+	(stops: stop_id = 1 - 5 and the charging shop stop_id = 0)
+
+--Clarify pub/sub 
+	inside main() of d_com.cpp 

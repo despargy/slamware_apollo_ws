@@ -1,0 +1,5 @@
+<launch>
+    <node name="apollo_lidar" pkg="apollo_lidar" type="apollo_lidar" output="screen" respawn="false">
+            <rosparam file="$(find apollo_lidar)/config/scan.yaml" command="load"/> 
+    </node>
+</launch>

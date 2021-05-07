@@ -1,0 +1,3 @@
+scan_topic1: "scan"
+scan_topic0: "inter/scan"
+#scan_topic0: "/slamware_ros_sdk_server_node/scan"

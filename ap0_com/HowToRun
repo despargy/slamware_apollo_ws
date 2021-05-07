@@ -1,0 +1,9 @@
+# from laptop to apollo run
+T1) $ roslaunch slamware_ros_sdk apollo_slamware_ros_sdk_server_node.launch ip_address:=192.168.11.1
+
+# view rviz
+T2) roslaunch slamware_ros_sdk apollo_view_slamware_ros_sdk_server_node.launch 
+
+
+# to simulate gui run
+T3) $ ./srv # under ap0_com/src

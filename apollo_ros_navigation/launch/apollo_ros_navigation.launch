@@ -1,0 +1,27 @@
+  <launch>
+
+
+  <!-- Map server -->
+  <arg name="map_file" default="$(find apollo_ros_navigation)/maps/my_map55.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" >
+  </node>
+
+  <!-- <node pkg="tf" type="static_transform_publisher" name="base2laser" args="0 0 0 0 0 0 1 /base_link /laser 1"/> //0 0 0 0.707  0.707 0 0-->
+  <node pkg="tf" type="static_transform_publisher" name="base2laser" args="0 0 0 0 0 0 1 /base_link /laser 1"/>
+
+
+  <!-- AMCL -->
+  <arg name="amcl_launch_file" default="$(find apollo_ros_navigation)/launch/apollo_ros_localization.launch"/>
+  <arg name="initial_pose_x" default="0.0"/> <!-- Use 17.0 for willow's map in simulation -->
+  <arg name="initial_pose_y" default="0.0"/> <!-- Use 17.0 for willow's map in simulation -->
+  <arg name="initial_pose_a" default="0.0"/>
+  <!-- <arg name="transform_tolerance" default="0.1"/> -->
+
+  <include file="$(arg amcl_launch_file)">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)"/>
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)"/>
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)"/>
+
+  </include>
+
+  </launch>

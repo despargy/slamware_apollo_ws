@@ -1,0 +1,9 @@
+roslaunch slamware_ros_sdk slamware_ros_sdk_server_node.launch ip_address:=192.168.11.1
+
+roslaunch slamware_ros_sdk view_slamware_ros_sdk_server_node.launch
+
+# save the map
+rosrun map_server map_saver -f my_map map:=/slamware_ros_sdk_server_node/map
+
+# robot state
+rostopic echo /slamware_ros_sdk_server_node/robot_basic_state

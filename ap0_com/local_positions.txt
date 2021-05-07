@@ -1,0 +1,35 @@
+# mprosta apo grafeio k deksia
+    position: 
+      x: 0.734389249637
+      y: 0.58334498162
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: -0.00844992893416
+      w: 0.999964298713
+
+# mprosta apo drone 
+
+  pose: 
+    position: 
+      x: 1.55840465795
+      y: -0.234326958602
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: -0.624186443917
+      w: 0.781275420854
+
+# mprosta apo kulindrous
+
+    position: 
+      x: 3.09452558437
+      y: -0.816233886072
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: -0.413778252572
+      w: 0.910377700572
